@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>A6 - Sol y Luna</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  </head>
+  <body>
+  <script>
+
+  // Tarea 11 - Sol y Luna
+  // Ethan Vazquez
+
+  // Sol
+  let xS, yS, dS, rS, vS;
+
+  // Luna
+  let xL, yL, dL, rL, vL;
+
+  function setup() {
+    createCanvas(900, 500);
+    
+    // Sol
+    dS = width * 0.18;      
+    rS = dS / 2;
+    yS = height * 0.35;     
+    xS = -rS;                  
+    vS = width / 380;
+
+    // Luna
+    dL = dS * 0.5;
+    rL = dL / 2;
+    yL = height * 0.22;
+    xL = -width - rL;
+    vL = vS;
+  }
+
+  function draw() {
+
+    // Fondo según posición del sol
+    if (xS <= width + rS) {
+      background(135, 200, 235);   // Día
+    } else {
+      background(10, 10, 30);      // Noche
+    }
+
+    // Suelo hierba
+    noStroke();
+    fill(34, 140, 50);
+    rect(0, height * 0.78, width, height * 0.22);
+
+    // Sol
+    fill(255, 215, 0);
+    circle(xS, yS, dS);
+
+    // Luna
+    fill(230, 230, 240);
+    circle(xL, yL, dL);
+
+    // Movimiento
+    xS = xS + vS;
+    xL = xL + vL;
+
+    // Reinicio
+    if (xS >= 2 * width - rS) {
+      xS = -rS;
+      xL = -width - rL;
+    }
+
+    // Texto
+    fill(0);
+    textSize(16);
+    text("Tarea 11 - Día y Noche", 20, 30);
+  }
+
+  </script>
+  </body>
+</html>
