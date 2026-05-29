@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>A5 - Día y Noche</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  </head>
+  <body>
+  <script>
+  // Tarea 10 - Día y Noche con Sol
+  // Ethan Vazquez
+
+  let xS, yS, dS, rS, vS;
+
+  function setup() {
+    createCanvas(900, 500);
+    
+    dS = width * 0.18;      
+    rS = dS / 2;
+    yS = height * 0.35;     
+    xS = -rS;                  
+    vS = width / 380;       
+  }
+
+  function draw() {
+    // Fondo según posición del sol (if - else)
+    if (xS <= width + rS) {
+      background(135, 200, 235);   // Día 
+    } else {
+      background(10, 10, 30);      // Noche 
+    }
+
+    // Suelo hierba
+    noStroke();
+    fill(34, 140, 50);
+    rect(0, height * 0.78, width, height * 0.22);
+
+    // Sol
+    fill(255, 215, 0);
+    circle(xS, yS, dS);
+
+    // Mov del sol
+    xS = xS + vS;
+
+    // Reinicio del sol (para q vuelva a salir por la izquierda)
+    if (xS >= 2 * width - rS) {
+      xS = -rS;
+    }
+
+    // Texto
+    fill(0);
+    textSize(16);
+    text("Tarea 10 - Día y Noche", 20, 30);
+  }
+  </script>
+  </body>
+</html>

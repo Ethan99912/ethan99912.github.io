@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>A1 - Variables y movimiento</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  </head>
+  <body>
+  <script>
+  // Tarea 6 Variables
+  // Ethan Vazquez
+  
+  let x;     // posicion del coche
+  let vel;   // velocidad
+
+  function setup() {
+    createCanvas(900, 500);
+    
+    x = -120;
+    vel = 3;
+  }
+
+  function draw() {
+    background(100, 210, 230); // cielo
+    
+    // sol
+    fill(255, 230, 0);
+    circle(650, 120, 80);
+    
+    // suelo hierba
+    fill(40, 180, 60);
+    rect(0, 380, 900, 120);
+    
+    // casa
+    fill(200, 90, 110);
+    rect(130, 230, 170, 150);
+    
+    fill(120, 50, 20);
+    triangle(110, 230, 330, 230, 220, 110);
+    
+    // puerta casa
+    fill(67);
+    rect(170, 300, 35, 80);
+    
+    // coche
+    fill(200, 30, 90);
+    rect(x, 310, 120, 50, 8);
+    
+    fill(30);
+    rect(x + 20, 285, 60, 30);
+    
+    // ruedas coche
+    fill(10);
+    circle(x + 30, 365, 30);
+    circle(x + 85, 365, 30);
+    
+    // movimiento
+    x = x + vel;
+
+    // texto
+    fill(0);
+    textSize(15);
+    text("Tarea 6 - Movimiento con variables", 20, 25);
+  }
+  </script>
+  </body>
+</html>

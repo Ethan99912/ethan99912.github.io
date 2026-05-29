@@ -1,0 +1,381 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>A11 - Impacto y Puntos</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+</head>
+
+<body>
+
+<script>
+
+// Tarea 16 - Impacto y Contador
+// Ethan Vazquez
+
+// sol
+let xS, yS, dS, rS, vS;
+
+// luna
+let xL, yL, dL, rL, vL;
+
+// calendario
+let dia, mes, anio;
+
+// stickman
+let xP, yP;
+let S;
+let vP;
+
+let groundY;
+let vY;
+let jumpV;
+let g;
+
+// disparo
+let xD, yD;
+let tD;
+let vD;
+let disparoActivo;
+
+// objetivo
+let xO, yO;
+let wO, hO;
+let vO;
+
+// puntos
+let puntos;
+
+function setup() {
+
+  createCanvas(900, 550);
+
+  // Sol
+  dS = width * 0.18;
+  rS = dS / 2;
+
+  xS = -rS;
+  yS = height * 0.30;
+
+  vS = width / 380;
+
+  // luna
+  dL = dS * 0.48;
+  rL = dL / 2;
+
+  xL = -width - rL;
+  yL = height * 0.22;
+
+  vL = vS;
+
+  // calendario
+  dia = 1;
+  mes = 1;
+  anio = 2025;
+
+  // stickman
+  groundY = height * 0.78;
+
+  S = min(width, height) * 0.12;
+
+  xP = width * 0.25;
+  yP = groundY;
+
+  vP = width / 150;
+
+  vY = 0;
+  jumpV = -height * 0.030;
+  g = height * 0.0016;
+
+  // disparo
+  tD = width * 0.015;
+  vD = height * 0.02;
+
+  disparoActivo = false;
+
+  // objetivo
+  wO = width * 0.08;
+  hO = height * 0.04;
+
+  xO = width * 0.5;
+  yO = height * 0.18;
+
+  vO = random(2, 4);
+
+  // puntos
+  puntos = 0;
+
+}
+
+function draw() {
+
+  // cielo
+  if (xS <= width + rS) {
+    background(135, 200, 235);
+  } else {
+    background(10, 10, 30);
+  }
+
+  // suelo
+  noStroke();
+  fill(34, 140, 50);
+  rect(0, height * 0.78, width, height * 0.22);
+
+  // sol y luna
+  dibujarSol();
+  dibujarLuna();
+
+  // mov sol luna
+  xS = xS + vS;
+  xL = xL + vL;
+
+  // reinicio
+  if (xS > 2 * width + rS) {
+
+    xS = -rS;
+    xL = -width - rL;
+
+    actualizarCalendario();
+
+  }
+
+  // objetivo
+  xO = xO + vO;
+
+  if (xO > width + wO) {
+
+    xO = -wO;
+
+    vO = random(2, 5);
+
+  }
+
+  if (xO < -wO) {
+
+    xO = width + wO;
+
+    vO = -random(2, 5);
+
+  }
+
+  // disparo
+  if (disparoActivo == true) {
+
+    yD = yD - vD;
+
+    // impacto
+    if (xD > xO && xD < xO + wO &&
+        yD > yO && yD < yO + hO) {
+
+      puntos = puntos + 1;
+
+      disparoActivo = false;
+
+      // reaparece objetivo
+      xO = -wO;
+
+      vO = random(2, 5);
+
+    }
+
+    // si sale arriba
+    if (yD < 0) {
+
+      disparoActivo = false;
+
+    }
+
+    dibujarDisparo();
+
+  }
+
+  dibujarObjetivo();
+
+  // mov stickman
+  if (keyIsDown(LEFT_ARROW)) {
+
+    xP = xP - vP;
+
+  } else if (keyIsDown(RIGHT_ARROW)) {
+
+    xP = xP + vP;
+
+  }
+
+  // limites
+  if (xP < 0) {
+    xP = 0;
+  }
+
+  if (xP > width) {
+    xP = width;
+  }
+
+  // salto
+  vY = vY + g;
+  yP = yP + vY;
+
+  if (yP > groundY) {
+
+    yP = groundY;
+    vY = 0;
+
+  }
+
+  // stickman
+  dibujarStickman();
+
+  // calendario y puntos
+  dibujarCalendario();
+  dibujarPuntos();
+
+}
+
+function keyPressed() {
+
+  // salto
+  if (keyCode === UP_ARROW) {
+
+    if (yP === groundY) {
+
+      vY = jumpV;
+
+    }
+
+  }
+
+  // disparo
+  if (key === " ") {
+
+    if (disparoActivo == false) {
+
+      xD = xP;
+      yD = yP - S;
+
+      disparoActivo = true;
+
+    }
+
+  }
+
+}
+
+function dibujarSol() {
+
+  noStroke();
+  fill(255, 215, 0);
+
+  circle(xS, yS, dS);
+
+}
+
+function dibujarLuna() {
+
+  noStroke();
+  fill(230);
+
+  circle(xL, yL, dL);
+
+}
+
+function dibujarObjetivo() {
+
+  fill(220, 60, 60);
+  rect(xO, yO, wO, hO, 6);
+
+  fill(255);
+  circle(xO + wO/2, yO + hO/2, hO * 0.5);
+
+}
+
+function dibujarDisparo() {
+
+  noStroke();
+  fill(255, 240, 0);
+
+  circle(xD, yD, tD);
+
+}
+
+function dibujarStickman() {
+
+  stroke(255, 140, 0);
+  strokeWeight(5);
+  noFill();
+
+  // cabeza
+  circle(xP, yP - S, S * 0.4);
+
+  // cuerpo
+  line(xP, yP - S * 0.8, xP, yP - S * 0.2);
+
+  // brazos
+  line(xP - S * 0.25, yP - S * 0.6,
+       xP + S * 0.25, yP - S * 0.6);
+
+  // piernas
+  line(xP, yP - S * 0.2,
+       xP - S * 0.2, yP);
+
+  line(xP, yP - S * 0.2,
+       xP + S * 0.2, yP);
+
+}
+
+function dibujarCalendario() {
+
+  noStroke();
+
+  if (xS <= width + rS) {
+    fill(0);
+  } else {
+    fill(255);
+  }
+
+  textSize(20);
+
+  text("Fecha: " + dia + "/" + mes + "/" + anio, 20, 30);
+
+}
+
+function dibujarPuntos() {
+
+  noStroke();
+
+  if (xS <= width + rS) {
+    fill(0);
+  } else {
+    fill(255);
+  }
+
+  textSize(20);
+
+  text("Puntos: " + puntos, 20, 60);
+
+}
+
+function actualizarCalendario() {
+
+  dia = dia + 1;
+
+  if (dia > 30) {
+
+    dia = 1;
+    mes = mes + 1;
+
+  }
+
+  if (mes > 12) {
+
+    mes = 1;
+    anio = anio + 1;
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
