@@ -155,26 +155,38 @@
       link.click();
     });
 
-    btnStart.addEventListener("click", async () => {
-      try {
-        btnStart.disabled = true;
+  btnStart.addEventListener("click", async () => {
+  try {
 
-        setStatus("iniciando cámara…");
-        await initCamera();
+    btnStart.disabled = true;
 
-        setStatus("cargando modelo COCO-SSD…");
-        detector = await ml5.objectDetector("cocossd");
+    setStatus("PASO 1 - iniciando camara");
+    await initCamera();
 
-        setStatus("detectando…");
-        running = true;
-        loopDetect();
+    setStatus("PASO 2 - camara OK");
 
-      } catch (e) {
-        console.error(e);
-        setStatus(`error: ${e.name}`);
-        btnStart.disabled = false;
-      }
-    });
+    detector = await ml5.objectDetector("cocossd");
+
+    setStatus("PASO 3 - modelo cargado");
+
+    running = true;
+    loopDetect();
+
+    setStatus("PASO 4 - detectando");
+
+  } catch (e) {
+
+    console.error(e);
+
+    alert(e.name + " : " + e.message);
+
+    setStatus("ERROR: " + e.name);
+
+    btnStart.disabled = false;
+
+  }
+});
+    
   </script>
 </body>
 </html>
